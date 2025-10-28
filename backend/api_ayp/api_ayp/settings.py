@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'pets',
     'users',
+    'my_msgs',
     'rest_framework_simplejwt',
     'django_filters',
 
