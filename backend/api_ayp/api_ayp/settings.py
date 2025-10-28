@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'users',
     'rest_framework_simplejwt',
     'django_filters',
+
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

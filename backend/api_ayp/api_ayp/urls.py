@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from pets.views import PetViewSet
 from users.views import MyTokenObtainPairView, UserViewSet
 from django.conf import settings
 from django.conf.urls.static import static
@@ -8,12 +9,12 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
-
+router.register(r'pets', PetViewSet, basename='pet')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', UserViewSet.as_view({'post': 'create', 'get': 'list'}), name='user-create'),
     path('api/', include(router.urls)),
-
+    path('api/pets/', PetViewSet.as_view({'post': 'create', 'get': 'list'}), name='pet-create'),
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
