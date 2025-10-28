@@ -136,16 +136,21 @@ class MainScreen extends StatelessWidget {
   }).toList(),
 ),
 
-          SizedBox(height: 20),
+          SizedBox(height: 40),
           Text(
             'Bem-vindo ao Projeto Adote Seu Pet!',
+            textAlign: TextAlign.center,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           Text(
-            'Encontre seu novo melhor amigo aqui.',
+            "Encontre seu novo melhor amigo aqui Navegue por perfis de animais adoráveis que estão esperando por um lar amoroso. Junte-se a nós na missão de conectar pets com famílias dedicadas. Adote, não compre!",
             style: TextStyle(fontSize: 16),
+            textAlign: TextAlign.center,
+
           ),
+
+          SizedBox(height: 40),
         ]
         
         ,
