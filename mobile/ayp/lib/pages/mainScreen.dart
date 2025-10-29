@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../models/pet.dart';
 import './petPage.dart';
+import './profilePage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -16,16 +17,36 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late Future<List<Pet>> petsFuture;
+  String? username;
 
   @override
   void initState() {
     super.initState();
     petsFuture = fetchPets();
+    fetchUser();
+  }
+
+  Future<void> fetchUser() async {
+    final url = Uri.parse('http://127.0.0.1:8000/api/users/me/');
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.token}',
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          username = data['username'];
+        });
+      }
+    } catch (e) {}
   }
 
   Future<List<Pet>> fetchPets() async {
     final url = Uri.parse('http://127.0.0.1:8000/api/pets/');
-
     final response = await http.get(
       url,
       headers: {
@@ -80,33 +101,44 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Text('Bem-vindo',
-                    style: TextStyle(color: Colors.white, fontSize: 18)),
+                Text(
+                  username != null ? 'Bem-vindo, $username' : 'Bem-vindo',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
               ],
             ),
           ),
           ListTile(
-              leading: const Icon(Icons.home, color: Colors.blueAccent),
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-              }),
+            leading: const Icon(Icons.home, color: Colors.blueAccent),
+            title: const Text('Home'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
           ListTile(
-              leading: const Icon(Icons.person, color: Colors.blueAccent),
-              title: const Text('Perfil'),
-              onTap: () {
-                Navigator.pop(context);
-              }),
+            leading: const Icon(Icons.person, color: Colors.blueAccent),
+            title: const Text('Perfil'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(token: widget.token),
+                ),
+              );
+            },
+          ),
           ListTile(
-              leading: const Icon(Icons.favorite, color: Colors.red),
-              title: const Text('Dogs'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PetPage()),
-                );
-              }),
+            leading: const Icon(Icons.favorite, color: Colors.red),
+            title: const Text('Dogs'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PetPage()),
+              );
+            },
+          ),
           const Spacer(),
           const Padding(
             padding: EdgeInsets.only(bottom: 8.0),
@@ -149,10 +181,12 @@ class _MainScreenState extends State<MainScreen> {
               }).toList(),
             ),
             const SizedBox(height: 40),
-            const Text(
-              'Bem-vindo ao Projeto Adote Seu Pet!',
+            Text(
+              username != null
+                  ? 'Bem-vindo, $username ao Projeto Adote Seu Pet!'
+                  : 'Bem-vindo ao Projeto Adote Seu Pet!',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
             const Text("Sobre o Projeto",

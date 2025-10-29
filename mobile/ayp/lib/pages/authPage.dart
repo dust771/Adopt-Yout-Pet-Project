@@ -1,7 +1,9 @@
+// authPage.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'mainScreen.dart';
+import './registerPage.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -38,9 +40,6 @@ class _AuthPageState extends State<AuthPage> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final accessToken = data['access'];
-        final userId = data['user_id'];
-
-        debugPrint('Login bem-sucedido: userId=$userId, token=$accessToken');
 
         if (!mounted) return;
         Navigator.pushReplacement(
@@ -56,7 +55,6 @@ class _AuthPageState extends State<AuthPage> {
         );
       }
     } catch (e) {
-      debugPrint('Erro no login: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao conectar: $e')),
       );
@@ -127,6 +125,16 @@ class _AuthPageState extends State<AuthPage> {
                               ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                               : const Text('Entrar'),
                         ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const RegisterPage()),
+                          );
+                        },
+                        child: const Text('Cadastrar nova conta'),
                       ),
                     ],
                   ),
