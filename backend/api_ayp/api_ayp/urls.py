@@ -12,12 +12,10 @@ router = routers.DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'pets', PetViewSet, basename='pet')
 router.register(r'messages', MessageViewSet, basename='message')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/users/', UserViewSet.as_view({'post': 'create', 'get': 'list'}), name='user-create'),
     path('api/', include(router.urls)),
-    path('api/messages/', MessageViewSet.as_view({'post': 'create', 'get': 'list'}), name='message-create'),
-    path('api/pets/', PetViewSet.as_view({'post': 'create', 'get': 'list'}), name='pet-create'),
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

@@ -79,6 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'last_name': _lastNameController.text.trim(),
     };
 
+    // Só envia password se o usuário digitou algo
     if (_passwordController.text.isNotEmpty) {
       bodyData['password'] = _passwordController.text;
     }
@@ -94,8 +95,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 204) {
+        setState(() {
+          _editing = false;
+          _passwordController.clear(); // Limpa campo de senha
+        });
         fetchUser();
-        setState(() => _editing = false);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Conta atualizada com sucesso')),
         );
@@ -244,8 +248,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                      labelText: 'Nova senha (opcional)'),
+                  decoration:
+                      const InputDecoration(labelText: 'Nova senha'),
                   enabled: _editing,
                 ),
               ],
