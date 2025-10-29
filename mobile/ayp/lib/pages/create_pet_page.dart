@@ -65,7 +65,7 @@ class _CreatePetPageState extends State<CreatePetPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Pet criado com sucesso!')),
         );
-        Navigator.pop(context, true); // Retorna e recarrega a lista
+        Navigator.pop(context, true);
       } else {
         final resBody = await response.stream.bytesToString();
         debugPrint("Erro: ${response.statusCode} => $resBody");

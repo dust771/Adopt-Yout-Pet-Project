@@ -19,7 +19,7 @@ class Pet {
   return Pet(
     id: json['id'],
     name: json['name'] ?? '',
-    age: json['age'].toString(),  // <-- força string
+    age: json['age'].toString(),  //force the string
     local: json['local'] ?? '',
     description: json['description'] ?? '',
     image: json['image'] != null ? '$baseUrl${json['image']}' : null,

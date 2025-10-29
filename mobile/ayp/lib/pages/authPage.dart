@@ -20,7 +20,7 @@ class _AuthPageState extends State<AuthPage> {
   bool _obscurePassword = true;
   bool _loading = false;
 
-  final String baseUrl = 'http://localhost:8000'; // Android Emulator, altere se necessário
+  final String baseUrl = 'http://localhost:8000';
 
   @override
   void dispose() {

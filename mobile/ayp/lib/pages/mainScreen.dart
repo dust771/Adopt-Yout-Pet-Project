@@ -1,4 +1,5 @@
 // mainScreen.dart
+import 'dart:async'; // <-- adicionado
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -21,12 +22,24 @@ class _MainScreenState extends State<MainScreen> {
   List<dynamic> pets = [];
   bool loadingPets = true;
   String? username;
+  Timer? _refreshTimer; // <-- timer adicionado
 
   @override
   void initState() {
     super.initState();
     _fetchPets();
     _fetchUser();
+
+    // Atualiza pets automaticamente a cada 10 segundos
+    _refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      _fetchPets();
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel(); // cancela timer ao sair da tela
+    super.dispose();
   }
 
   Future<void> _fetchPets() async {
