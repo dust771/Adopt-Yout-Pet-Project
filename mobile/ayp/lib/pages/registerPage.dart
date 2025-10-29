@@ -99,24 +99,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(labelText: 'Email'),
-                        validator: (value) => (value == null || value.isEmpty) ? 'Informe o email' : null,
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _firstNameController,
-                        decoration: const InputDecoration(labelText: 'Nome'),
-                        validator: (value) => (value == null || value.isEmpty) ? 'Informe o nome' : null,
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _lastNameController,
-                        decoration: const InputDecoration(labelText: 'Sobrenome'),
-                        validator: (value) => (value == null || value.isEmpty) ? 'Informe o sobrenome' : null,
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
                         controller: _passwordController,
                         obscureText: _obscurePassword,
                         decoration: InputDecoration(
