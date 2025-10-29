@@ -30,7 +30,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     fetchUser();
   }
 
-  // Busca o primeiro usuário da lista
   Future<void> fetchUser() async {
     try {
       final response = await http.get(
@@ -44,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (response.statusCode == 200) {
         final List<dynamic> dataList = json.decode(response.body);
         if (dataList.isNotEmpty) {
-          final data = dataList[0]; // pega o primeiro usuário
+          final data = dataList[0];
           setState(() {
             userData = data;
             _usernameController.text = data['username'] ?? '';
@@ -215,15 +214,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: (userData != null &&
-                          userData!['avatar'] != null &&
-                          userData!['avatar'].toString().isNotEmpty)
-                      ? NetworkImage('${widget.baseUrl}${userData!['avatar']}')
-                      : const NetworkImage(
-                          'https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png'),
-                ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: _usernameController,
