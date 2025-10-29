@@ -112,8 +112,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> deleteUser(String password) async {
+  Future<void> deleteUser() async {
     final url = Uri.parse('${widget.baseUrl}/api/users/${userData?['id']}/');
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
 
     try {
       final response = await http.delete(
@@ -122,24 +128,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'Authorization': 'Bearer ${widget.token}',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'password': password}),
       );
 
+      Navigator.pop(context); // Fecha o loading
+
       if (response.statusCode == 204) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Conta excluída com sucesso')),
+        );
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const AuthPage()),
           (route) => false,
         );
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Conta excluída com sucesso')),
-        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Senha incorreta')),
+          SnackBar(
+            content: Text('Erro ao excluir conta (${response.statusCode})'),
+          ),
         );
       }
     } catch (e) {
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao excluir: $e')),
       );
@@ -147,17 +157,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _confirmDelete() {
-    final TextEditingController _confirmPassword = TextEditingController();
-
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Confirmar exclusão'),
-          content: TextField(
-            controller: _confirmPassword,
-            obscureText: true,
-            decoration: const InputDecoration(labelText: 'Digite a senha'),
+          content: const Text(
+            'Tem certeza de que deseja excluir sua conta? Essa ação não poderá ser desfeita.',
           ),
           actions: [
             TextButton(
@@ -167,8 +173,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () {
-                deleteUser(_confirmPassword.text);
                 Navigator.pop(context);
+                deleteUser();
               },
               child: const Text('Excluir'),
             ),
