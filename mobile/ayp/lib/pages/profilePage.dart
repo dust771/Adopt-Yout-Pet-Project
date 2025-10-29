@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import './authPage.dart'; // Importe a tela de login aqui
+import './authPage.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String token;
+  final String baseUrl;
 
-  const ProfileScreen({super.key, required this.token});
+  const ProfileScreen({super.key, required this.token, required this.baseUrl});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -29,12 +30,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     fetchUser();
   }
 
+  // Busca o primeiro usuário da lista
   Future<void> fetchUser() async {
-    final url = Uri.parse('http://127.0.0.1:8000/api/users/');
-
     try {
       final response = await http.get(
-        url,
+        Uri.parse('${widget.baseUrl}/api/users/'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${widget.token}',
@@ -43,9 +43,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (response.statusCode == 200) {
         final List<dynamic> dataList = json.decode(response.body);
-        final data = dataList.isNotEmpty ? dataList[0] : null;
-
-        if (data != null) {
+        if (dataList.isNotEmpty) {
+          final data = dataList[0]; // pega o primeiro usuário
           setState(() {
             userData = data;
             _usernameController.text = data['username'] ?? '';
@@ -56,9 +55,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           });
         } else {
           setState(() => _loading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Usuário não encontrado')),
-          );
         }
       } else {
         setState(() => _loading = false);
@@ -75,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> updateUser() async {
-    final url = Uri.parse('http://127.0.0.1:8000/api/users/${userData?['id']}/');
+    final url = Uri.parse('${widget.baseUrl}/api/users/${userData?['id']}/');
 
     Map<String, dynamic> bodyData = {
       'username': _usernameController.text.trim(),
@@ -118,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> deleteUser(String password) async {
-    final url = Uri.parse('http://127.0.0.1:8000/api/users/${userData?['id']}/');
+    final url = Uri.parse('${widget.baseUrl}/api/users/${userData?['id']}/');
 
     try {
       final response = await http.delete(
@@ -224,8 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   backgroundImage: (userData != null &&
                           userData!['avatar'] != null &&
                           userData!['avatar'].toString().isNotEmpty)
-                      ? NetworkImage(
-                          'http://127.0.0.1:8000${userData!['avatar']}')
+                      ? NetworkImage('${widget.baseUrl}${userData!['avatar']}')
                       : const NetworkImage(
                           'https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png'),
                 ),

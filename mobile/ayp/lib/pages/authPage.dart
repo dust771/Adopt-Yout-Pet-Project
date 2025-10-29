@@ -20,6 +20,8 @@ class _AuthPageState extends State<AuthPage> {
   bool _obscurePassword = true;
   bool _loading = false;
 
+  final String baseUrl = 'http://localhost:8000'; // Android Emulator, altere se necessário
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -29,7 +31,7 @@ class _AuthPageState extends State<AuthPage> {
 
   Future<void> login(String username, String password) async {
     setState(() => _loading = true);
-    final url = Uri.parse('http://127.0.0.1:8000/api/token/');
+    final url = Uri.parse('$baseUrl/api/token/');
     try {
       final response = await http.post(
         url,
@@ -45,7 +47,7 @@ class _AuthPageState extends State<AuthPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => MainScreen(token: accessToken),
+            builder: (_) => MainScreen(token: accessToken, baseUrl: baseUrl),
           ),
         );
       } else {
